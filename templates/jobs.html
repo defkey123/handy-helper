@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Handy Helper - Jobs</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    </head>
+    <body class="panel">
+        <div id="topnav" class="topnav animated headroom headroom--pinned fadeInDown">
+            <h1 class="inlineblock paddingleft">Hello {{session['firstname']}}!</h1>
+            <form class="inlineblock paddingleft" action="/log_out">
+                <input class="btn btn-primary" type="submit" value="Log out">
+            </form>
+            <form class="inlineblock" action="/jobs/new">
+                <input class="btn btn-primary" type="submit" value="New Job">
+            </form>
+        </div>
+
+        <div class="panel panel-heading">
+            <h3>Everyone's Jobs:</h3>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <td>Jobs</td><td>Location</td><td>Actions</td>
+                </tr>
+                    {% for job in all_jobs %}
+                    <tr>
+                        {% if job["claimed_by"] == None %}
+                            <td>{{job["title"]}}</td>
+                            <td>{{job["location"]}}</td>
+                            <td>
+                                <a href="/jobs/{{job["id"]}}">View</a> |
+                                {% if job["posted_by"] == session['uid'] %}
+                                    <a href="jobs/remove_job/{{job["id"]}}">Remove</a> |
+                                    <a href="jobs/edit/{{job["id"]}}">Edit</a> |
+                                {% else %}
+                                <a href="/jobs/add/{{job["id"]}}">Claim</a>
+                                {% endif %}
+                            </td>
+                            {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div class="panel panel-heading">
+            <h3>{{session['firstname']}}'s Jobs:</h3>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <td>Jobs</td><td>Location</td><td>Actions</td>
+                </tr>
+                    {% for job in all_jobs %}
+                    <tr>
+                        {% if job["claimed_by"] == session['uid'] %}
+                            <td>{{job["title"]}}</td>
+                            <td>{{job["location"]}}</td>
+                            <td>
+                                <a href="/jobs/{{job["id"]}}">View</a> |
+                                {% if job["posted_by"] == session['uid'] %}
+                                {% endif %}
+                                <a href="/jobs/giveup/{{job["id"]}}">Give Up</a>
+                            </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+            </table>
+        </div>
+
+    </body>
+</html>

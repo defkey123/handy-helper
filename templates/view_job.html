@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Handy Helper - View Job</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    </head>
+    <body>
+
+        <div id="topnav" class="topnav animated headroom headroom--pinned fadeInDown container">
+            <a class="btn btn-primary center-container" href="/jobs">
+                <img class="small-icon inlineblock" src="/static/home-icon.png"></img> Back to jobs
+            </a>
+            <h1 class="inlineblock center-container block"> Hello {{session['firstname']}}! These are the job details!</h1>
+            <form class="inlineblock center-container" action="/log_out">
+                <input class="btn btn-primary" type="submit" value="Log out">
+            </form>
+        </div>
+
+        <div class="panel panel-heading center-container">
+            <h3>{{job[0]["title"]}}</h3>
+            <table class="table table-bordered table-hover">
+                <tr><td>{{job[0]["description"]}}</td></tr>
+                <tr><td>Location: {{job[0]["location"]}}</td></tr>
+                <tr><td>Posted By: {{job[0]["first_name"]}} {{job[0]["last_name"]}}</td></tr>
+                <tr><td>Posted On: {{job[0]["created_at"].strftime('%b %d, %Y')}}</td></tr>
+                <tr><td>Categories: {{job[0]["category"]}}
+                    {% if job[0]["other"] != None %}
+                        , {{job[0]["other"]}}
+                    {% endif %}
+                </td></tr>
+            </table>
+            {% if job[0]["claimed_by"] != session['uid'] %}
+                <a href="/jobs/add/{{job[0]["id"]}}">Add to my jobs</a>
+            {% endif %}
+            {% if job[0]["claimed_by"] == session['uid'] %}
+                <a href="/jobs/giveup/{{job[0]["id"]}}">Give up</a>
+            {% endif %}
+        </div>
+
+    </body>
+</html>

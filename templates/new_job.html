@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Post a Job</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    </head>
+    <body class="panel">
+
+        <div id="topnav" class="topnav animated headroom headroom--pinned fadeInDown container">
+            <a class="btn btn-primary center-container" href="/jobs">
+                <img class="small-icon inlineblock" src="/static/home-icon.png"></img> Back to jobs
+            </a>
+            <h1 class="inlineblock center-container block"> Hello {{session['firstname']}}! Create a job!</h1>
+            <form class="inlineblock center-container" action="/log_out">
+                <input class="btn btn-primary" type="submit" value="Log out">
+            </form>
+        </div>
+
+        <div class="panel panel-heading">
+            <form class="inlineblock" action="/create_job" method="post">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for m in messages %}
+                            <p class="bg-danger">{{m}}</p>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                <p>Title <input class="form-control" type="text" name="title"></p>
+                <p>Description <input class="form-control" type="text" name="description"></p>
+                <p>Location <input class="form-control" type="text" name="location"></p>
+                <a class="btn btn-danger" href="/jobs">Cancel</a>
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </form>
+        </div>
+
+    </body>
+</html>
